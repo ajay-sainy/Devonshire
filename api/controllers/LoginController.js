@@ -5,15 +5,35 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
- const login = function (req, res) {
+ const NO_USER_ID = "Please enter user id";
+ const NO_PASSWORD = "Please enter password";
 
-	var id = req.param('userid');
+ const login = function (request, response) {
+
+	var userid = req.param('userid');
  	var password = req.param('password');
-
+ 	
  	//Validation
+ 	var error = [];
+ 	if(!userid) {
+ 		error.push(NO_USER_ID);
+ 	} else if(!password) {
+ 		error.push(NO_PASSWORD);
+ 	} if(!userid && !password) {
+ 		error.push(NO_USER_ID);
+ 		error.push(NO_PASSWORD);
+ 	}
+
+ 	if(error.length!=0) {
+ 		response.status(401);
+ 		response.send(error);
+ 		return;
+ 	}
+ 	
+ 	//Valid request
  	loginHelper(id,password)
- 	.then(function(resp) {
- 		if(resp) {
+ 	.then(function(helper_resp) {
+ 		if(helper_resp) {
  			sails.log("User found ");
  			res.send(resp.id);	
  		} else {
@@ -50,14 +70,20 @@
 
  const loginHelper= function(id,password) {
  	return new Promise(function(resolve, reject) {
- 		sails.log("Id "+id+" password "+password);
- 		User.findOne({ where: {id:id,password:password}, limit: 1,select:['id']}).exec(function (err,resp) {
- 			if (err) {
+ 		
+ 		User.findOne({ where: {id:id,password:password}, limit: 1,select:['id']}).exec(function (db_err,db_resp) {
+ 			if (db_err) {
  				sails.log("Error occured "+err);
  				return reject(err);
  			}
  			
- 			return resolve(resp);
+ 			//If db response contains id, credential correct
+ 			if(db_resp.id) {
+ 				return resolve(true);
+ 			} else {
+ 				return resolve(false);
+ 			}
+ 			
  		});
  	})
  };
