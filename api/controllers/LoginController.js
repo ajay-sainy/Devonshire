@@ -11,7 +11,6 @@
  	var password = req.param('password');
 
  	//Validation
-
  	loginHelper(id,password)
  	.then(function(resp) {
  		if(resp) {
