@@ -32,7 +32,7 @@
   "scripts": {
     "debug": "node debug app.js",
     "start": "node app.js",
-    "start:alter":"node app.js --models.migrate=safe"
+    "start:alter":"node app.js --models.migrate=alter"
 
   },
   "main": "app.js",
