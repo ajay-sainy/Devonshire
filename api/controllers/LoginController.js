@@ -7,89 +7,88 @@
 
  const NO_USER_ID = "Please enter user id";
  const NO_PASSWORD = "Please enter password";
+ const UNSUCCESSFUL_LOGIN = "Invalid user id or password";
+ const TECHNICAL_ERROR_MSG = "Could not log you in. Please try again. If the problem persist, please contact customer care.";
+
 
  const login = function (request, response) {
 
-	var userid = req.param('userid');
- 	var password = req.param('password');
+ 	var userid = request.param("user-id");
+ 	var password = request.param("password");
  	
- 	//Validation
- 	var error = [];
+ 	var return_response = {
+ 		"message" : [],
+ 		"data" : {}
+ 	};
+
+ 	//Validataion
+ 	var temp_error = [];
+
  	if(!userid) {
- 		error.push(NO_USER_ID);
- 	} else if(!password) {
- 		error.push(NO_PASSWORD);
- 	} if(!userid && !password) {
- 		error.push(NO_USER_ID);
- 		error.push(NO_PASSWORD);
+ 		temp_error.push(NO_USER_ID);
  	}
 
- 	if(error.length!=0) {
+ 	if(!password) {
+ 		temp_error.push(NO_PASSWORD);
+ 	}
+
+ 	if(temp_error.length!=0) {
+ 		return_response.message = temp_error;
  		response.status(401);
- 		response.send(error);
+ 		response.send(return_response);
  		return;
  	}
- 	
+
  	//Valid request
- 	loginHelper(id,password)
- 	.then(function(helper_resp) {
- 		if(helper_resp) {
- 			sails.log("User found ");
- 			res.send(resp.id);	
- 		} else {
- 			sails.log("User not found ");
- 			res.send(false);
- 		}
+ 	loginHelper(userid,password)
+ 	.then(function() {
+
+ 		//Logged in successfully 		
+		sails.log("User authenticated successfully");
+
+		//TO DO - Fetch userdetails
+		response.status(200);
+		return_response.message.push("User authenticated, now fetch user details and return that");
+		response.send(return_response);
  		
  	})
- 	.catch((err) => {
- 		res.serverError(err);
- 	})
- };
+ 	.catch(function (err) {
+ 		
+ 		response.status(500);
+ 		
 
- const create= function(req,res) {
- 	var userid = req.param('userid');
- 	var password = req.param('password');
+ 		
+ 		return_response.message.push(temp_error);
 
- 	User.create({id:userid,password:password}).exec(function (err, data) {
- 		if (err) { return res.serverError(err); }
- 		sails.log('Created user with id '+data.id);
- 		return res.ok();
+ 		response.send(return_response);
+ 		
+
  	});
  };
 
- const fetchUser = function(req,res) {
- 	User.find().exec(function (err,resp) {
- 		if(err) {
- 			res.send(err);
- 		} else {
- 			res.send(resp);
- 		}
- 	});
- };
 
+ //TODO - password encrypt
  const loginHelper= function(id,password) {
  	return new Promise(function(resolve, reject) {
  		
  		User.findOne({ where: {id:id,password:password}, limit: 1,select:['id']}).exec(function (db_err,db_resp) {
  			if (db_err) {
  				sails.log("Error occured "+err);
- 				return reject(err);
+ 				return reject(TECHNICAL_ERROR_MSG);
  			}
  			
- 			//If db response contains id, credential correct
+ 			//If db response contains id, credential correct  			
  			if(db_resp.id) {
- 				return resolve(true);
+ 				return resolve();
  			} else {
- 				return resolve(false);
+ 				return reject(UNSUCCESSFUL_LOGIN); //TODO - proper message
  			}
  			
  		});
- 	})
+ 	});
  };
 
  module.exports = {
  	login,
- 	create,
- 	fetchUser
- }
+ 	
+ };

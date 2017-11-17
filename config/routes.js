@@ -35,9 +35,7 @@ module.exports.routes = {
   '/': {
     view: 'homepage'
   },
-  'post /api/login' : 'LoginController.login',
-  'get /api/fetchUser': 'LoginController.fetchUser',
-  'get /api/create': 'LoginController.create'
+  'post /api/login' : 'LoginController.login'
   
   /***************************************************************************
   *                                                                          *
