@@ -68,17 +68,17 @@
 
 
  //TODO - password encrypt
- const loginHelper= function(id,password) {
+ const loginHelper= function(userid,password) {
  	return new Promise(function(resolve, reject) {
- 		
- 		User.findOne({ where: {id:id,password:password}, limit: 1,select:['id']}).exec(function (db_err,db_resp) {
+ 		sails.log(userid+" "+password);
+ 		User.findOne({ where: {userid:userid,password:password}, limit: 1,select:['userid']}).exec(function (db_err,db_resp) {
  			if (db_err) {
- 				sails.log("Error occured "+err);
+ 				sails.log("Error occured "+db_err);
  				return reject(TECHNICAL_ERROR_MSG);
  			}
- 			
+ 			sails.log(db_resp);
  			//If db response contains id, credential correct  			
- 			if(db_resp.id) {
+ 			if(db_resp.userid) {
  				return resolve();
  			} else {
  				return reject(UNSUCCESSFUL_LOGIN); //TODO - proper message
@@ -89,6 +89,5 @@
  };
 
  module.exports = {
- 	login,
- 	
+ 	login, 	
  };

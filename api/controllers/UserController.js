@@ -148,8 +148,8 @@
 
  		UserDetails.create({userid:userid,fname:fname,lname:lname,dob:dob,phone:phone}).exec(function (db_err, db_resp) {
 			if (db_err) {
-				sails.log("Error occured in createHelper "+err);
-				return reject(err);
+				sails.log("Error occured in createHelper "+db_err);
+				return reject(db_err);
 			}
 		  	
 		  	return resolve();
