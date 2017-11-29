@@ -11,19 +11,41 @@ module.exports = {
 	    type: 'string',
 	    primaryKey: true,
 	    unique: true
-	  },
+	 },
+	 type: {
+	 	type:'string',
+	 	size:20
+	 },
 	fname: {
-		type: 'string' 
+		type: 'string',
+		size: 50
 	},
 	lname: {
-		type: 'string' 
+		type: 'string',
+		size: 50
 	},
 	dob: {
-		type: 'string' 
+		type: 'string',
+		size:11
 	},
 	phone: {
-		type: 'string' 
-	}
+		type: 'string',
+		size:11
+	},
+	email: {
+		type: 'string',
+		size: '20'
+	},
+
+	accounts: {
+      collection: 'Accounts',
+      via: 'user'
+    },
+
+    addresses: {
+    	collection: 'Addresses',
+      	via: 'user'	
+    }
   }
 };
 

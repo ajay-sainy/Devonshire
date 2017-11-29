@@ -17,12 +17,18 @@ module.exports.models = {
   * connections (see `config/connections.js`)                                *
   *                                                                          *
   ***************************************************************************/
-  connection: 'herokuDB',
+  // connection: 'herokuDB',
+  // schema: true,
+  // migrate:'alter',
+  // autoCreatedAt: true,
+  // autoUpdatedAt: true,
+
+
+  connection: 'mySQLServer',
   schema: true,
-  migrate:'safe',
+  migrate:'alter',
   autoCreatedAt: true,
   autoUpdatedAt: true,
-
 
 
   /***************************************************************************
