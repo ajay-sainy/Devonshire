@@ -1,10 +1,3 @@
-/**
- * LoginController
- *
- * @description :: Server-side logic for managing logins
- * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
- */
-
  const NO_USER_ID = "Please enter user id";
  const NO_PASSWORD = "Please enter password";
  const UNSUCCESSFUL_LOGIN = "Invalid user id or password";

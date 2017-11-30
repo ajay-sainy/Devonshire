@@ -10,31 +10,39 @@ module.exports = {
   	userid: {
 	    type: 'string',
 	    primaryKey: true,
-	    unique: true
+	    unique: true,
+	    
+	    autoIncrement:true
 	 },
 	 type: {
 	 	type:'string',
-	 	size:20
+	 	size:20,
+		required: true
 	 },
 	fname: {
 		type: 'string',
-		size: 50
+		size: 50,
+		required: true,
 	},
 	lname: {
 		type: 'string',
-		size: 50
+		size: 50,
+		required: true,
 	},
 	dob: {
 		type: 'string',
-		size:11
+		size:11,
+		required: true,
 	},
 	phone: {
 		type: 'string',
-		size:11
+		size:11,
+		required: true,
 	},
 	email: {
 		type: 'string',
-		size: '20'
+		size: '20',
+		required: true,
 	},
 
 	accounts: {
@@ -45,6 +53,11 @@ module.exports = {
     addresses: {
     	collection: 'Addresses',
       	via: 'user'	
+    },
+
+    credentials: {
+    	collection: 'Credentials',
+    	via:'userid'
     }
   }
 };

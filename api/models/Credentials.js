@@ -1,22 +1,31 @@
 module.exports = {
   attributes: {
-  	userid: {
+  	username: {
 	    type: 'string',
 	    primaryKey: true,
 	    unique: true,
-	    size:20
-	  },
+	    size:20,
+	    required: true
+	},
 	password: {
 		type: 'string',
-		size:20
+		size:20,
+		required: true
 	},
 	type: {
 		type:'string',
-		size:10
+		size:10,
+		required: true
 	},
 	active: {
 		type:'boolean',
-		size:'5'
+		required: true		
+	},
+
+	userid: {
+		model:'Users',
+		required:true,
+		size:20,
 	}
   }
 };

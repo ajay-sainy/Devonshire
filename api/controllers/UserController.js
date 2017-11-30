@@ -1,160 +1,121 @@
+const createCredential = function (request, response) {
 
-
- const createCredential = function (request, response) {
-
- 	var userid = request.param("user-id");
- 	var password = request.param("password");
- 	
- 	
- 	var return_response = {
- 		"message" : [],
- 		"data" : {}
+	var return_response = {
+ 		"message" : [], 		
+ 		"success" : false
  	};
 
- 	//Validataion
- 	var temp_error = [];
+ 	var username = request.param("username");
+	var password = request.param("password");
+	var userid = request.param("userid");
 
- 	if(!userid) {
- 		temp_error.push("No iser id");
- 	}
+ 	var params = {
+ 		username:username,
+ 		password:password,
+ 		userid:userid,
+ 		active:true,
+ 		type:'user'
+ 	};
 
- 	if(!password) {
- 		temp_error.push("No password");
- 	}
+ 	var validateResponse = UserService.validateCredentials(params);
 
- 	if(temp_error.length!=0) {
- 		return_response.message = temp_error;
+ 	//Validation fails
+ 	if(validateResponse.error.length!=0) {
+ 		return_response.success = false; 		
+		return_response.message = validateResponse.error; 		
+
  		response.status(400);
  		response.send(return_response);
+ 		
  		return;
  	}
 
  	//Valid request
- 	createCredentialHelper(userid,password)
+ 	UserService.createCredentialsHelper(params)
  	.then(function() {
 
  		//Logged in successfully 		
 		sails.log("User created successfully");
-
-		//TO DO - Fetch userdetails
-		response.status(200);
+		
+		return_response.success = true;
 		return_response.message.push("User credentials created");
-		response.send(return_response);
- 		
+
+		response.status(200);
+		response.send(return_response); 		
  	})
  	.catch(function (err) {
+ 		sails.log.error("User creation failed " + err);
+ 		
+ 		return_response.success = false;
+ 		return_response.message.push(err);
  		
  		response.status(500);
- 		
- 		return_response.message.push(temp_error);
-
  		response.send(return_response);
- 		
-
  	});
  };
 
 
- const createCredentialHelper= function(userid,password) {
- 	return new Promise(function(resolve, reject) {
-
- 		User.create({userid:userid,password:password}).exec(function (db_err, db_resp) {
-			if (db_err) {
-				sails.log("Error occured in createHelper "+err);
-				return reject(err);
-			}
-		  	
-		  	return resolve();
-		  
-		});
- 		
- 	
- 	});
- };
-
-
+ /** User details creations **/
  const createUser = function (request, response) {
 
- 	var userid = request.param("user-id");
+	var return_response = {
+ 		"message" : [], 		
+ 		"success" : false
+ 	};
+ 	
  	var fname = request.param("fname");
  	var lname = request.param("lname");
  	var dob = request.param("dob");
  	var phone = request.param("phone");
+ 	var type = request.param("type");
+ 	var email = request.param("email"); 	
 
+ 	var params = {
+		fname:fname,
+		lname:lname,
+		dob:dob,
+		phone:phone,
+		type:type,
+		email:email
+	};
  	
- 	var return_response = {
- 		"message" : [],
- 		"data" : {}
- 	};
-
  	//Validataion
- 	var temp_error = [];
+ 	var validateResponse = UserService.validateUserDetails(params);
 
- 	if(!userid) {
- 		temp_error.push("No iser id");
- 	}
-
- 	if(!fname) {
- 		temp_error.push("No first name");
- 	}
-
- 	if(!lname) {
- 		temp_error.push("No last name");
- 	}
-
- 	if(!dob) {
- 		temp_error.push("No dob");
- 	}
-
- 	if(!phone) {
- 		temp_error.push("No phone");
- 	}
-
- 	if(temp_error.length!=0) {
+ 	if(validateResponse.error.length!=0) {
+ 		return_response.success = false;
  		return_response.message = temp_error;
- 		response.status(400);
+
+ 		response.status(400); 		
  		response.send(return_response);
  		return;
  	}
 
  	//Valid request
- 	createHelper(userid,fname,lname,dob,phone)
+ 	UserService.createUserHelper(params)
  	.then(function() {
 
  		//Logged in successfully 		
 		sails.log("User created successfully");
 
 		//TO DO - Fetch userdetails
-		response.status(200);
+		return_response.success = true;
 		return_response.message.push("User created");
+		
+		response.status(200);
 		response.send(return_response);
  		
  	})
  	.catch(function (err) {
+ 		sails.log.error("Error occured "+err);
  		
  		response.status(500);
- 		
+ 		temp_error.push(err);
+
+ 		return_response.success = false;
  		return_response.message.push(temp_error);
 
  		response.send(return_response);
- 		
-
- 	});
- };
-
-
- const createHelper= function(userid,lname,fname,dob,phone) {
- 	return new Promise(function(resolve, reject) {
-
- 		UserDetails.create({userid:userid,fname:fname,lname:lname,dob:dob,phone:phone}).exec(function (db_err, db_resp) {
-			if (db_err) {
-				sails.log("Error occured in createHelper "+db_err);
-				return reject(db_err);
-			}
-		  	
-		  	return resolve();
-		  
-		});
  	});
  };
 
