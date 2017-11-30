@@ -1,3 +1,6 @@
+const CREDENTIALS_CREATED = "User credentials created successfully";
+const USER_CREATED = "User created successfully";
+
 const createCredential = function (request, response) {
 
 	var return_response = {
@@ -35,16 +38,16 @@ const createCredential = function (request, response) {
  	.then(function() {
 
  		//Logged in successfully 		
-		sails.log("User created successfully");
+		sails.log("User credentials created successfully");
 		
 		return_response.success = true;
-		return_response.message.push("User credentials created");
+		return_response.message.push(CREDENTIALS_CREATED);
 
 		response.status(200);
 		response.send(return_response); 		
  	})
  	.catch(function (err) {
- 		sails.log.error("User creation failed " + err);
+ 		sails.log.error("User credentials creation failed " + err);
  		
  		return_response.success = false;
  		return_response.message.push(err);
@@ -84,7 +87,7 @@ const createCredential = function (request, response) {
 
  	if(validateResponse.error.length!=0) {
  		return_response.success = false;
- 		return_response.message = temp_error;
+ 		return_response.message = validateResponse.error;
 
  		response.status(400); 		
  		response.send(return_response);
@@ -100,7 +103,7 @@ const createCredential = function (request, response) {
 
 		//TO DO - Fetch userdetails
 		return_response.success = true;
-		return_response.message.push("User created");
+		return_response.message.push(USER_CREATED);
 		
 		response.status(200);
 		response.send(return_response);
@@ -113,7 +116,7 @@ const createCredential = function (request, response) {
  		temp_error.push(err);
 
  		return_response.success = false;
- 		return_response.message.push(temp_error);
+ 		return_response.message.push(err);
 
  		response.send(return_response);
  	});

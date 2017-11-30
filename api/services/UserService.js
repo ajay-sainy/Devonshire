@@ -1,3 +1,14 @@
+const NO_USERNAME = "No username";
+const NO_PASSWORD = "No password";
+const NO_USERID = "No userid";
+const NO_FIRSTNAME = "No first name";
+const NO_LASTNAME = "No lastname";
+const NO_DOB = "No dob";
+const NO_PHONE = "No phone";
+const NO_TYPE = "No user type";
+const NO_EMAIL = "No email";
+
+
 module.exports = {
   validateCredentials: function(params) {
     var result = {
@@ -10,16 +21,16 @@ module.exports = {
 
     //Validataion
     if (!username) {
-      result.error.push("No username");
+      result.error.push(NO_USERNAME);
     }
 
     if (!password) {
-      result.error.push("No password");
+      result.error.push(NO_PASSWORD);
     }
 
     //TODO - Make foreign key validation here
     if (!userid) {
-      result.error.push("No userid");
+      result.error.push(NO_USERID);
     }
 
     return result;
@@ -51,27 +62,27 @@ module.exports = {
     var email = params.email;
 
     if (!fname) {
-      result.error.push("No first name");
+      result.error.push(NO_FIRSTNAME);
     }
 
     if (!lname) {
-      result.error.push("No last name");
+      result.error.push(NO_LASTNAME);
     }
 
     if (!dob) {
-      result.error.push("No dob");
+      result.error.push(NO_DOB);
     }
 
     if (!phone) {
-      result.error.push("No phone");
+      result.error.push(NO_PHONE);
     }
 
     if (!type) {
-      result.error.push("No type");
+      result.error.push(NO_TYPE);
     }
 
     if (!email) {
-      result.error.push("No email");
+      result.error.push(NO_EMAIL);
     }
 
     return result;

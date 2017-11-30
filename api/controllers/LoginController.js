@@ -6,78 +6,57 @@
 
  const login = function (request, response) {
 
- 	var userid = request.param("userid");
- 	var password = request.param("password");
- 	
- 	sails.log("UserId - "+userid);
- 	sails.log("Password - "+password);
-
  	var return_response = {
  		"message" : [],
- 		"data" : {}
+ 		"success" : false
+ 	};
+
+ 	var username = request.param("username");
+ 	var password = request.param("password");
+
+ 	var params = {
+ 		username:username,
+ 		password:password
  	};
 
  	//Validataion
- 	var temp_error = [];
+ 	var validateResponse = LoginService.validateLogin(params);
 
- 	if(!userid) {
- 		temp_error.push(NO_USER_ID);
- 	}
-
- 	if(!password) {
- 		temp_error.push(NO_PASSWORD);
- 	}
-
- 	if(temp_error.length!=0) {
- 		return_response.message = temp_error;
+ 	if(validateResponse.error.length!=0) {
+ 		sails.log("User login validation error");
+		return_response.success = false;
+ 		return_response.message = validateResponse.error;
+ 		
  		response.status(401);
  		response.send(return_response);
  		return;
  	}
 
  	//Valid request
- 	loginHelper(userid,password)
- 	.then(function() {
+ 	LoginService.loginHelper(params)
+ 	.then(function(userid) {
 
  		//Logged in successfully 		
 		sails.log("User authenticated successfully");
 
 		//TO DO - Fetch userdetails
+		return_response.success = true;
+		return_response.message.push(userid);
+		
 		response.status(200);
-		return_response.message.push("User authenticated, now fetch user details and return that");
 		response.send(return_response);
  		
  	})
  	.catch(function (err) {
+ 		sails.log.error("User login failed. error - "+err); 		
+
+ 		return_response.success = false;
+ 		return_response.message.push(err);
  		response.status(500);
- 		temp_error.push(err);
- 		return_response.message.push(temp_error);
  		response.send(return_response);
  	});
  };
 
-
- //TODO - password encrypt
- const loginHelper= function(userid,password) {
- 	return new Promise(function(resolve, reject) {
- 
- 		User.findOne({ where: {userid:userid,password:password}, limit: 1,select:['userid']}).exec(function (db_err,db_resp) {
- 			if (db_err) {
- 				sails.log("Error occured "+db_err);
- 				return reject(TECHNICAL_ERROR_MSG);
- 			}
- 			sails.log.debug("DB response "+db_resp);
- 			//If db response contains id, credential correct  			
- 			if(db_resp) {
- 				return resolve();
- 			} else {
- 				return reject(UNSUCCESSFUL_LOGIN); //TODO - proper message
- 			}
- 			
- 		});
- 	});
- };
-
  module.exports = {
- 	login, 	
+ 	login 	
  };
