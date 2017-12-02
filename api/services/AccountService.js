@@ -31,15 +31,16 @@ module.exports = {
 
     return result;
   },
+  
   verifyAccountHelper: function(params) {
     return new Promise(function(resolve, reject) {
-      Accounts.findOne({ where: {'accountid' : params.accountid, 'pin' : params.pin} }).exec(function(db_err, db_resp) {
+      Accounts.findOne({ where: {'accountid' : params.accountid, 'pin' : params.pin}, select:['userid']}).exec(function(db_err, db_resp) {
         if (db_err) {
           return reject(db_err);
         }
 
         if(db_resp)
-        	return resolve();
+        	return resolve(db_resp.userid);
 
         return reject(ACCOUNT_NOT_FOUND);
 

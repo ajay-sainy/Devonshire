@@ -11,7 +11,7 @@ module.exports = {
 	    type: 'integer',
 	    primaryKey: true,
 	    unique: true,
-	    
+	    size:20,
 	    autoIncrement:true
 	 },
 	 type: {

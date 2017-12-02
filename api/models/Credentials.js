@@ -14,7 +14,7 @@ module.exports = {
 	},
 	type: {
 		type:'string',
-		size:10,
+		size:20,
 		required: true
 	},
 	active: {
@@ -23,7 +23,7 @@ module.exports = {
 	},
 
 	userid: { //Foreign key
-		type:'string',
+		type:'integer',
 		required:true,
 		size:20,
 	}

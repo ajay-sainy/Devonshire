@@ -8,14 +8,10 @@ const verifyAccount = function(request, response) {
     "success": false
   };
 
-  var accountid = request.param("accountid");
-  var pin = request.param("pin");
-  var dob = request.param("dob");
-
   var params = {
-    accountid: accountid,
-    pin: pin,
-    dob: dob
+    accountid: request.param("accountid"),
+    pin: request.param("pin"),
+    dob: request.param("dob")
   };
 
   //Validataion
@@ -32,14 +28,14 @@ const verifyAccount = function(request, response) {
 
   //Valid request
   AccountService.verifyAccountHelper(params)
-    .then(function() {
+    .then(function(userid) {
 
       //Logged in successfully 		
       sails.log("Account verified successfully");
 
       //TO DO - Fetch userdetails
       return_response.success = true;
-      return_response.message.push(ACCOUNT_VERIFIED);
+      return_response.message.push(userid);
 
       response.status(200);
       response.send(return_response);
@@ -57,5 +53,6 @@ const verifyAccount = function(request, response) {
 };
 
 module.exports = {
-	verifyAccount
+	verifyAccount,
+  
 };

@@ -1,26 +1,29 @@
 const CREDENTIALS_CREATED = "User credentials created successfully";
 const USER_CREATED = "User created successfully";
 
-const createCredential = function(request, response) {
+const enrollUser = function(request, response) {
 
   var return_response = {
     "message": [],
     "success": false
-  };
-
-  var username = request.param("username");
-  var password = request.param("password");
-  var userid = request.param("userid");
+  };  
 
   var params = {
-    username: username,
-    password: password,
-    userid: userid,
-    active: true,
-    type: 'user'
+       username : request.param("username"),
+       password : request.param("password"),
+       confirmPassword : request.param("confirmPassword"),
+       userid : request.param("userid"),
+
+       q1 : request.param("q1"),
+       q2 : request.param("q2"),
+       q3 : request.param("q3"),
+
+       a1 : request.param("a1"),
+       a2 : request.param("a2"),
+       a3 : request.param("a3")
   };
 
-  var validateResponse = UserService.validateCredentials(params);
+  var validateResponse = UserService.validateEnroll(params);
 
   //Validation fails
   if (validateResponse.error.length != 0) {
@@ -34,11 +37,11 @@ const createCredential = function(request, response) {
   }
 
   //Valid request
-  UserService.createCredentialsHelper(params)
+  UserService.enrollHelper(params)
     .then(function() {
 
       //Logged in successfully 		
-      sails.log("User credentials created successfully");
+      sails.log("User enrolled successfully");
 
       return_response.success = true;
       return_response.message.push(CREDENTIALS_CREATED);
@@ -47,7 +50,7 @@ const createCredential = function(request, response) {
       response.send(return_response);
     })
     .catch(function(err) {
-      sails.log.error("User credentials creation failed " + err);
+      sails.log.error("User enroll failed " + err);
 
       return_response.success = false;
       return_response.message.push(err);
@@ -121,5 +124,5 @@ const createUser = function(request, response) {
 
 module.exports = {
   createUser,
-  createCredential
+  enrollUser
 };
