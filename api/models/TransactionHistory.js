@@ -7,7 +7,6 @@ module.exports = {
       unique:true,
       autoIncrement:true,
       primaryKey: true
-
     },
     type: {
       type:'string',
@@ -19,18 +18,13 @@ module.exports = {
       size:20,
       required: true
     },
-    to_account: {
-      type:'string',
+    payeeid: {
+      type:'integer',
       size:20
     },
     amount: {
       type: 'double',
       required: true
-    },
-    
-    account: {
-      model:'Accounts',
-      required: true
-    }
+    }    
   }
 };

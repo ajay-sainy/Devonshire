@@ -1,128 +1,125 @@
 const CREDENTIALS_CREATED = "User credentials created successfully";
 const USER_CREATED = "User created successfully";
 
-const createCredential = function (request, response) {
+const createCredential = function(request, response) {
 
-	var return_response = {
- 		"message" : [], 		
- 		"success" : false
- 	};
+  var return_response = {
+    "message": [],
+    "success": false
+  };
 
- 	var username = request.param("username");
-	var password = request.param("password");
-	var userid = request.param("userid");
+  var username = request.param("username");
+  var password = request.param("password");
+  var userid = request.param("userid");
 
- 	var params = {
- 		username:username,
- 		password:password,
- 		userid:userid,
- 		active:true,
- 		type:'user'
- 	};
+  var params = {
+    username: username,
+    password: password,
+    userid: userid,
+    active: true,
+    type: 'user'
+  };
 
- 	var validateResponse = UserService.validateCredentials(params);
+  var validateResponse = UserService.validateCredentials(params);
 
- 	//Validation fails
- 	if(validateResponse.error.length!=0) {
- 		return_response.success = false; 		
-		return_response.message = validateResponse.error; 		
+  //Validation fails
+  if (validateResponse.error.length != 0) {
+    return_response.success = false;
+    return_response.message = validateResponse.error;
 
- 		response.status(400);
- 		response.send(return_response);
- 		
- 		return;
- 	}
+    response.status(400);
+    response.send(return_response);
 
- 	//Valid request
- 	UserService.createCredentialsHelper(params)
- 	.then(function() {
+    return;
+  }
 
- 		//Logged in successfully 		
-		sails.log("User credentials created successfully");
-		
-		return_response.success = true;
-		return_response.message.push(CREDENTIALS_CREATED);
+  //Valid request
+  UserService.createCredentialsHelper(params)
+    .then(function() {
 
-		response.status(200);
-		response.send(return_response); 		
- 	})
- 	.catch(function (err) {
- 		sails.log.error("User credentials creation failed " + err);
- 		
- 		return_response.success = false;
- 		return_response.message.push(err);
- 		
- 		response.status(500);
- 		response.send(return_response);
- 	});
- };
+      //Logged in successfully 		
+      sails.log("User credentials created successfully");
 
+      return_response.success = true;
+      return_response.message.push(CREDENTIALS_CREATED);
 
- /** User details creations **/
- const createUser = function (request, response) {
+      response.status(200);
+      response.send(return_response);
+    })
+    .catch(function(err) {
+      sails.log.error("User credentials creation failed " + err);
 
-	var return_response = {
- 		"message" : [], 		
- 		"success" : false
- 	};
- 	
- 	var fname = request.param("fname");
- 	var lname = request.param("lname");
- 	var dob = request.param("dob");
- 	var phone = request.param("phone");
- 	var type = request.param("type");
- 	var email = request.param("email"); 	
+      return_response.success = false;
+      return_response.message.push(err);
 
- 	var params = {
-		fname:fname,
-		lname:lname,
-		dob:dob,
-		phone:phone,
-		type:type,
-		email:email
-	};
- 	
- 	//Validataion
- 	var validateResponse = UserService.validateUserDetails(params);
+      response.status(500);
+      response.send(return_response);
+    });
+};
 
- 	if(validateResponse.error.length!=0) {
- 		return_response.success = false;
- 		return_response.message = validateResponse.error;
+/** User details creations **/
+const createUser = function(request, response) {
 
- 		response.status(400); 		
- 		response.send(return_response);
- 		return;
- 	}
+  var return_response = {
+    "message": [],
+    "success": false
+  };
 
- 	//Valid request
- 	UserService.createUserHelper(params)
- 	.then(function() {
+  var fname = request.param("fname");
+  var lname = request.param("lname");
+  var dob = request.param("dob");
+  var phone = request.param("phone");
+  var type = request.param("type");
+  var email = request.param("email");
 
- 		//Logged in successfully 		
-		sails.log("User created successfully");
+  var params = {
+    fname: fname,
+    lname: lname,
+    dob: dob,
+    phone: phone,
+    type: type,
+    email: email
+  };
 
-		//TO DO - Fetch userdetails
-		return_response.success = true;
-		return_response.message.push(USER_CREATED);
-		
-		response.status(200);
-		response.send(return_response);
- 		
- 	})
- 	.catch(function (err) {
- 		sails.log.error("Error occured "+err);
- 		
- 		response.status(500);
- 		temp_error.push(err);
+  //Validataion
+  var validateResponse = UserService.validateUserDetails(params);
 
- 		return_response.success = false;
- 		return_response.message.push(err);
+  if (validateResponse.error.length != 0) {
+    return_response.success = false;
+    return_response.message = validateResponse.error;
 
- 		response.send(return_response);
- 	});
- };
+    response.status(400);
+    response.send(return_response);
+    return;
+  }
 
- module.exports = {
- 	createUser	,
- 	createCredential
- };
+  //Valid request
+  UserService.createUserHelper(params)
+    .then(function() {
+
+      //Logged in successfully 		
+      sails.log("User created successfully");
+
+      //TO DO - Fetch userdetails
+      return_response.success = true;
+      return_response.message.push(USER_CREATED);
+
+      response.status(200);
+      response.send(return_response);
+
+    })
+    .catch(function(err) {
+      sails.log.error("Error occured in createUserHelper" + err);
+
+      return_response.success = false;
+      return_response.message.push(err);
+
+      response.status(500);
+      response.send(return_response);
+    });
+};
+
+module.exports = {
+  createUser,
+  createCredential
+};

@@ -39,7 +39,9 @@ module.exports.routes = {
 
   'post /api/createUser' : 'UserController.createUser',
 
-  'post /api/createCredential' : 'UserController.createCredential'
+  'post /api/createCredential' : 'UserController.createCredential',
+
+  'post /api/verifyAccount' : 'AccountController.verifyAccount'
 
 
   

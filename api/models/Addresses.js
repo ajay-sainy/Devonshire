@@ -40,11 +40,16 @@ module.exports = {
       type:'string',
       size:20,
       required: true,
-    }, 
+    },
+
+    userid: { //Foreign key
+      type:'integer',      
+      size: 20
+    },
     
-    user: {
-      model: 'Users',
-      required: true,
+    payeeid: { //Foreign key
+      type:'integer',
+      size:20
     }
   }
 };

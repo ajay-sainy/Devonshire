@@ -1,7 +1,7 @@
 module.exports = {
   attributes: {
   	accountTypeId: {
-	    type: 'string',
+	    type: 'integer',
 	    primaryKey: true,
 	    unique: true,
 	    size:20,
@@ -17,11 +17,6 @@ module.exports = {
 		type:'integer',
 		size:5,
 		required: true
-	},	
-	
-	accounts: {
-		collection: 'Accounts',
-      	via: 'account_ref'
 	}
   }
 };

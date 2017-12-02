@@ -1,0 +1,2 @@
+//Account create
+INSERT INTO accounts (accountid, open_date, close_date, active, balance, userid, pin, account_ref) values (1, '2017-12-01 18:07:30', '2017-12-01 18:07:30', true, 1000, 1, '1234', 1);

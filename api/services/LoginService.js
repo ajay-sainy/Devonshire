@@ -16,7 +16,7 @@ module.exports = {
 	 	}
 
 	 	if(!password) {
-	 		user.error.push(NO_PASSWORD);
+	 		result.error.push(NO_PASSWORD);
 	 	}
 
 	 	return result;
@@ -32,12 +32,11 @@ module.exports = {
  			}
  			
  			//If db response contains id, credential correct  		 			
- 			if(db_resp) {
+ 			if(db_resp) 
  				return resolve(db_resp.userid);
- 			} else {
- 				return reject(UNSUCCESSFUL_LOGIN); //TODO - proper message
- 			}
  			
+			return reject(UNSUCCESSFUL_LOGIN); //TODO - proper message
+ 		
  		});
  	});
  }

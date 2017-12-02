@@ -22,8 +22,8 @@ module.exports = {
 		required: true		
 	},
 
-	userid: {
-		model:'Users',
+	userid: { //Foreign key
+		type:'string',
 		required:true,
 		size:20,
 	}

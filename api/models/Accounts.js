@@ -1,11 +1,10 @@
 module.exports = {
   attributes: {
     accountid: {
-      type: 'string',
-      primaryKey: true,
+      type: 'string',      
       unique: true,
       required: true,
-      autoIncrement: true
+      size:20      
     },
     open_date: {
     	type:'datetime',
@@ -24,21 +23,18 @@ module.exports = {
       required: true
     },
     
-    user: {
-      model: 'Users',
-      required: true
+    userid: { //Foreign key
+      type: 'integer',
+      required: true,
+      size:20
     },  
-
-    account_ref: {
-    	model: 'RefAccounts',
-      required: true
+    pin : {
+      type:'string',
+      size:10
     },
-
-
-    transactions: {
-      collection:'TransactionHistory',
-      via:'account'
+    account_ref: { //Foreign key
+    	type: 'integer',
+      required: true
     }
-
   }
 };

@@ -8,7 +8,6 @@ const NO_PHONE = "No phone";
 const NO_TYPE = "No user type";
 const NO_EMAIL = "No email";
 
-
 module.exports = {
   validateCredentials: function(params) {
     var result = {
@@ -93,8 +92,7 @@ module.exports = {
     return new Promise(function(resolve, reject) {
 
       Users.create(params).exec(function(db_err, db_resp) {
-        if (db_err) {
-          sails.log("Error occured in createHelper " + db_err);
+        if (db_err) {          
           return reject(db_err);
         }
 
