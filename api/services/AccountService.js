@@ -47,5 +47,23 @@ module.exports = {
 
       });
     });
+  },
+
+  getAccounts : function(userid) {
+    return new Promise(function(resolve, reject) {
+      var query = 'SELECT accountid, userid FROM accounts WHERE userid = "'+userid+'"';
+      sails.log('query - '+query);
+      Accounts.query(query, function(db_err, db_resp) {
+        if (db_err) {
+          reject(db_err);
+        }
+
+        if(db_resp) {
+          return resolve(db_resp);
+        }
+
+        return reject(NO_ACCOUNT_FOUND);
+      });
+    });
   }
 };

@@ -41,7 +41,11 @@ module.exports.routes = {
 
   'post /api/enrollUser' : 'UserController.enrollUser',
   
-  'post /api/verifyAccount' : 'AccountController.verifyAccount'
+  'post /api/verifyAccount' : 'AccountController.verifyAccount',
+
+  'get /api/getFromAccounts' : 'AccountController.getFromAccounts'
+
+
 
 
   

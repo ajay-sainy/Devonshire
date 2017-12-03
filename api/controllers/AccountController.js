@@ -1,5 +1,6 @@
 /** Verify Account during enroll **/
 const ACCOUNT_VERIFIED = "User verified successfully";
+const TECHNICAL_ERROR = "Some technical error occured";
 
 const verifyAccount = function(request, response) {
 
@@ -30,7 +31,7 @@ const verifyAccount = function(request, response) {
   AccountService.verifyAccountHelper(params)
     .then(function(userid) {
 
-      //Logged in successfully 		
+      //Logged in successfully    
       sails.log("Account verified successfully");
 
       //TO DO - Fetch userdetails
@@ -52,7 +53,38 @@ const verifyAccount = function(request, response) {
     });
 };
 
+const getFromAccounts = function(request, response) {
+
+  var return_response = {
+    "message": [],
+    "success": false
+  };
+
+  var params = {
+    'userid': request.session.userid,
+    'token': request.session.token,
+  };
+
+  SessionService.isValidSession(params)
+    .then(function() { return AccountService.getAccounts(params.userid); })
+    .then(function(return_response) {
+      sails.log(return_response);
+      response.send(return_response);
+      return;
+    })
+    .catch(function(err) {
+      sails.log('Error '+err);
+      response.status(500);
+
+      return_response.success = false;
+      return_response.message.push(TECHNICAL_ERROR);
+
+      response.send(return_response);
+      return;
+    });
+};
+
 module.exports = {
-	verifyAccount,
-  
+  verifyAccount,
+  getFromAccounts
 };

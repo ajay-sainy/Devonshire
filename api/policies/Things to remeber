@@ -1,2 +1,3 @@
 accounts.js has pin attribute - not present in db
 While verifing account during enroll, not checking dob in backend, only account and pin is being checked.
+Proper token and password encryption
