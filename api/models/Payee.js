@@ -3,8 +3,7 @@ module.exports = {
   	payeeid: {
 	    type: 'integer',
 	    primaryKey: true,
-	    unique: true,
-	    
+	    unique: true,	    
 	    autoIncrement:true
 	 },
 	 type: {
@@ -31,6 +30,11 @@ module.exports = {
 		type: 'string',
 		size: '20',
 		required: true,
+	},
+	
+	addressid : {
+		type:'integer',
+		size:20
 	}
   }
 };

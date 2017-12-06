@@ -1,3 +1,6 @@
 accounts.js has pin attribute - not present in db
 While verifing account during enroll, not checking dob in backend, only account and pin is being checked.
-Proper token and password encryption
+Proper token and password encryption,
+No input validation for transfer request (for ex. if amount is number or not).
+We are making transfer instantly for demo, in real world it will be clearing house.
+Add DB transaction while transferring amount

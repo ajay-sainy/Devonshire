@@ -43,7 +43,11 @@ module.exports.routes = {
   
   'post /api/verifyAccount' : 'AccountController.verifyAccount',
 
-  'get /api/getFromAccounts' : 'AccountController.getFromAccounts'
+  'get /api/getFromAccounts' : 'AccountController.getFromAccounts',
+
+  'post /api/transferToAccount' : 'AccountController.transferToAccount',
+
+  'get /api/getTransactionHistory' : 'TransactionController.getTransactionHistory'
 
 
 

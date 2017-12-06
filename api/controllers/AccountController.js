@@ -43,8 +43,12 @@ const verifyAccount = function(request, response) {
 
     })
     .catch(function(err) {
-      sails.log.error("Error occured during account verification " + err);
-      response.status(500);
+      sails.log.error("Error occured during account verification - " + err);
+      if (err === AccountService.ACCOUNT_NOT_FOUND) {
+        response.status(400);
+      } else {
+        response.status(500);
+      }
 
       return_response.success = false;
       return_response.message.push(err);
@@ -67,13 +71,18 @@ const getFromAccounts = function(request, response) {
 
   SessionService.isValidSession(params)
     .then(function() { return AccountService.getAccounts(params.userid); })
-    .then(function(return_response) {
-      sails.log(return_response);
+    .then(function(fetchedAccounts) {
+      fetchedAccounts.forEach(function(acc) {
+        sails.log(acc);
+        return_response.message.push({ 'accountid': acc.accountid, 'type': acc.type });
+      });
+      return_response.success = true;
+      response.status(200);
       response.send(return_response);
       return;
     })
     .catch(function(err) {
-      sails.log('Error '+err);
+      sails.log('Error - ' + err);
       response.status(500);
 
       return_response.success = false;
@@ -84,7 +93,51 @@ const getFromAccounts = function(request, response) {
     });
 };
 
+const transferToAccount = function(request, response) {
+  var return_response = {
+    "message": [],
+    "success": false
+  };
+
+  var params = {
+    'userid': request.session.userid,
+    'token': request.session.token,
+    'from': request.param("from"),
+    'to': request.param("to"),
+    'amount': request.param("amount"),
+    'type' : request.param("type")
+   };
+
+  SessionService.isValidSession(params)
+    .then(function() { return AccountService.isTransferValid(params); })
+    .then(function() { return AccountService.updateAccount(params,true); })
+    .then(function() { return AccountService.updateAccount(params,false); })
+    .then(function() { return AccountService.addToTransaction(params); })
+
+    .then(function() {
+
+      return_response.success = true;
+      response.status(200);
+      response.send(return_response);
+      return;
+    })
+    .catch(function(err) {
+      sails.log("Error - "+err);
+      if (err === AccountService.INSUFFICIENT_FUND) {
+        response.status(400);
+      } else {
+        response.status(500);
+      }
+
+      return_response.success = false;
+      return_response.message.push(err);
+      response.send(return_response);
+      return;
+    });
+};
+
 module.exports = {
   verifyAccount,
-  getFromAccounts
+  getFromAccounts,
+  transferToAccount
 };

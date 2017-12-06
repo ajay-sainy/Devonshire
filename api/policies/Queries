@@ -6,3 +6,12 @@ INSERT INTO (ref_questionid, question) values (1,'')
 
 //Insert Sercurity Questions
 INSERT INTO securityquestions(questionid,ref_questionid,answer,userid) values(1, 1, 'Ajay',1);
+
+//Select query for accounts with accouttype
+SELECT accounts.accountid, refaccounts.type FROM accounts LEFT JOIN refaccounts ON accounts.account_ref = refaccounts.accounttypeid WHERE accounts.userid = "1";
+
+SELECT accountid from accounts where accountid = "1" and userid = "1" and balance > 5;
+
+UPDATE accounts SET amount = 1 WHERE accountid = "1"
+
+	

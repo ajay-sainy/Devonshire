@@ -32,7 +32,7 @@ module.exports = {
       type:'string',
       size:10
     },
-    account_ref: { //Foreign key
+    ref_accountid: { //Foreign key
     	type: 'integer',
       required: true
     }
