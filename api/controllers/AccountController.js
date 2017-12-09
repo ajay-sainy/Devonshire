@@ -74,7 +74,7 @@ const getFromAccounts = function(request, response) {
     .then(function(fetchedAccounts) {
       fetchedAccounts.forEach(function(acc) {
         sails.log(acc);
-        return_response.message.push({ 'accountid': acc.accountid, 'type': acc.type });
+        return_response.message.push({ 'accountid': acc.accountid, 'type': acc.type, 'balance':acc.balance });
       });
       return_response.success = true;
       response.status(200);
@@ -105,13 +105,16 @@ const transferToAccount = function(request, response) {
     'from': request.param("from"),
     'to': request.param("to"),
     'amount': request.param("amount"),
-    'type' : request.param("type")
+    'type' : request.param("type"),
+    'category' : 'Transfer',
+    'debit' : true
+    
    };
 
   SessionService.isValidSession(params)
     .then(function() { return AccountService.isTransferValid(params); })
-    .then(function() { return AccountService.updateAccount(params,true); })
-    .then(function() { return AccountService.updateAccount(params,false); })
+    .then(function() { return AccountService.updateAccountBalance(params,true); })
+    .then(function() { return AccountService.updateAccountBalance(params,false); })
     .then(function() { return AccountService.addToTransaction(params); })
 
     .then(function() {

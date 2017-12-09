@@ -11,12 +11,13 @@ const getTransactionHistory = function(request, response) {
     'token': request.session.token,
     'accountid' : request.param('accountid')
   };
-
+  sails.log("calleds");
   SessionService.isValidSession(params)
     .then(function() { return TransactionService.getTransactions(params.accountid); })
     .then(function(fetchedTransactions) {
+      sails.log("fetchedTransactions - "+fetchedTransactions);
       fetchedTransactions.forEach(function(transaction) {
-        sails.log(transaction);
+        
         var row = {
         	'date' : transaction.createdAt,
         	'desc' : transaction.description,

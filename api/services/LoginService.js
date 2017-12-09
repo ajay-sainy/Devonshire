@@ -28,6 +28,7 @@ module.exports = {
 
       Credentials.findOne({ where: params, limit: 1, select: ['userid'] }).exec(function(db_err, db_resp) {
         if (db_err) {
+          sails.log(db_err);
           return reject(db_err);
         }
 

@@ -7,6 +7,7 @@ module.exports = {
           sails.log("Error in TransactionHistory - " + db_err);
           return reject(db_err);
         }
+        sails.log("Printing TransactionHistory "+db_resp);
         return resolve(db_resp);
       });
     });

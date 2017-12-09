@@ -52,12 +52,13 @@ module.exports = {
 
   getAccounts: function(userid) {
     return new Promise(function(resolve, reject) {
-      var query = 'SELECT accounts.accountid, refaccounts.type FROM accounts ' +
+      var query = 'SELECT accounts.accountid, accounts.balance, refaccounts.type FROM accounts ' +
         'LEFT JOIN refaccounts ON accounts.ref_accountid = refaccounts.accounttypeid ' +
         'WHERE accounts.userid = "' + userid + '"';
-      sails.log(query);
+
       Accounts.query(query, function(db_err, db_resp) {
         if (db_err) {
+          sails.log("Error in getAccounts " + db_err);
           return reject(db_err);
         }
 
@@ -78,7 +79,7 @@ module.exports = {
     });
   },
 
-  updateAccount: function(params, add) {
+  updateAccountBalance: function(params, add) {
     return new Promise(function(resolve, reject) {
       sails.log("updateAccount start = " + params);
       var query = '';
@@ -91,7 +92,7 @@ module.exports = {
           'SET balance = balance -' + params.amount + ' ' +
           'WHERE accountid = ' + params.from;
       }
-      sails.log("upadte query "+query);
+      sails.log("update query " + query);
       Accounts.query(query, function(db_err, db_resp) {
         if (db_err) {
           sails.log('Error in updateAccount - ' + db_err);
@@ -115,17 +116,31 @@ module.exports = {
         'from_account': params.from,
         'to_account': params.to,
         'type': params.type,
-        'amount': params.amount
+        'amount': params.amount,
+        'category': params.category,
+        'debit': params.debit,
       };
 
       console.log(row);
 
-      TransactionHistory.create(row).exec(function(db_err, db_resp) {
+      Accounts.findOne({ where: { 'accountid': params.from }, select: ['balance'] }).exec(function(db_err, db_resp) {
         if (db_err) {
-          sails.log('Error in addToTransaction - ' + db_err);
+          sails.log("Error in addToTransaction - " + db_err);
           return reject(db_err);
         }
-        return resolve();
+
+        if (db_resp) {
+          row.balance = db_resp.balance;
+          TransactionHistory.create(row).exec(function(db_err1, db_resp1) {
+            if (db_err1) {
+              sails.log('Error in addToTransaction 1 - ' + db_err1);
+              return reject(db_err1);
+            }
+            return resolve();
+          });
+        } else {
+          return reject(ACCOUNT_NOT_FOUND);
+        }
       });
     });
   },
@@ -136,7 +151,7 @@ module.exports = {
       var query = 'SELECT accountid FROM accounts ' +
         'WHERE accountid = "' + params.from + '" ' +
         'AND userid = "' + params.userid + '" AND balance >= ' + params.amount;
-      sails.log("isTransferValid query" + query);
+
       Accounts.query(query, function(db_err, db_resp) {
         if (db_err) {
           sails.log('Error in isTransferValid - ' + db_err);
