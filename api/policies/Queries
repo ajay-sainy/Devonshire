@@ -14,4 +14,6 @@ SELECT accountid from accounts where accountid = "1" and userid = "1" and balanc
 
 UPDATE accounts SET amount = 1 WHERE accountid = "1"
 
+insert into transactionhistory values(1,'Transfer','Bills',true,12345,98765,1,'DLC (Duquesne Light Co.)',100,5000,'2017-12-12 5:29:51','2017-12-12 5:29:51');
+
 	
